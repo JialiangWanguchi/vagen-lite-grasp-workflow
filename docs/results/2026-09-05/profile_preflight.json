@@ -1,0 +1,107 @@
+{
+  "model": "<PROJECT_ROOT>/models/Qwen3-VL-2B-Instruct-224",
+  "profile": {
+    "seed": 20260905,
+    "model": "models/Qwen3-VL-2B-Instruct-224",
+    "data": {
+      "prepared_dir": "prepared",
+      "image_root": "dataset/data/GraSP",
+      "train": "train.jsonl",
+      "val": "val.jsonl",
+      "test": "test.jsonl"
+    },
+    "vision": {
+      "max_side": 224,
+      "min_pixels": 4096,
+      "max_pixels": 50176,
+      "max_images": 16
+    },
+    "lora": {
+      "rank": 8,
+      "alpha": 16,
+      "target_modules": "all-linear",
+      "exclude_modules": ".*visual.*"
+    },
+    "hardware": {
+      "gpus_per_node": 1,
+      "nodes": 1,
+      "tensor_parallel": 1,
+      "ray_cpus": 4,
+      "object_store_bytes": 536870912
+    },
+    "sft": {
+      "batch_size": 4,
+      "micro_batch_size": 1,
+      "max_length": 3072,
+      "lr": 0.0001,
+      "epochs": 1,
+      "steps": 4
+    },
+    "grpo": {
+      "batch_size": 4,
+      "mini_batch_size": 4,
+      "micro_batch_size": 1,
+      "lr": 1e-05,
+      "epochs": 1,
+      "steps": 4,
+      "group_size": 4,
+      "temperature": 1.0,
+      "prompt_tokens": 1280,
+      "response_tokens": 512,
+      "max_num_seqs": 4,
+      "gpu_memory_fraction": 0.5,
+      "param_offload": false,
+      "optimizer_offload": false,
+      "agent_workers": 1,
+      "enforce_eager": false
+    },
+    "evaluation": {
+      "per_task": 4,
+      "gpu_memory_fraction": 0.8,
+      "max_model_len": 2048,
+      "max_num_seqs": 1,
+      "response_tokens": 512,
+      "enforce_eager": false
+    },
+    "sft_overrides": {},
+    "grpo_overrides": {}
+  },
+  "splits": {
+    "train": {
+      "n": 140,
+      "tasks": {
+        "A2": 70,
+        "P1": 70
+      },
+      "prompt_min": 650,
+      "prompt_max": 850,
+      "image_min": 12,
+      "image_max": 16,
+      "sha256": "3ab3fe7be0ec4f9104b0fdd1d8d191607d7441caa30e8e36bd58e9ae0e263908"
+    },
+    "val": {
+      "n": 20,
+      "tasks": {
+        "A2": 10,
+        "P1": 10
+      },
+      "prompt_min": 650,
+      "prompt_max": 850,
+      "image_min": 12,
+      "image_max": 16,
+      "sha256": "a9d4c0cb2b9ecd73e43805e69fc6f224f5834d5e5ff1045614903630710c614c"
+    },
+    "test": {
+      "n": 40,
+      "tasks": {
+        "A2": 20,
+        "P1": 20
+      },
+      "prompt_min": 650,
+      "prompt_max": 850,
+      "image_min": 12,
+      "image_max": 16,
+      "sha256": "c37e9917428bfb946a3fdf16820c4ce6da6dccf7593ba25118650c0063c5ef64"
+    }
+  }
+}

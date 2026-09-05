@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-05",
+  "requested_auditor": "gpt-5.4-xhigh",
+  "overall_verdict": "unavailable",
+  "integrity_status": "unavailable",
+  "independent_review_completed": false,
+  "reason": "The 'gpt-5.4' model is not supported when using Codex with a ChatGPT account.",
+  "checks": {},
+  "claims": []
+}

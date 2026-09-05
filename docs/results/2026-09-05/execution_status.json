@@ -1,0 +1,18 @@
+{
+  "source": "Private original per-stage *_exit_code.txt files, read and verified at publication",
+  "exit_codes": {
+    "base_test": 0,
+    "sft_train": 0,
+    "sft_test": 0,
+    "grpo_train": 0,
+    "grpo_test": 0,
+    "sft_grpo_train": 0,
+    "sft_grpo_test": 0,
+    "workflow_suite": 1,
+    "report_finalization": 0
+  },
+  "suite_failure": "All training/evaluation stages completed; Python 3.10 rejected an ISO timestamp ending in Z during report summarization.",
+  "fix": "Normalize Z to +00:00 before datetime.fromisoformat; rerun report finalization only.",
+  "training_rerun_for_publication": false,
+  "independent_audit_completed": false
+}

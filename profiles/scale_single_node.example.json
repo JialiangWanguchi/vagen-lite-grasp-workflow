@@ -1,0 +1,11 @@
+{
+  "model": "/EDIT/models/Qwen3-VL-8B-Instruct",
+  "data": {"prepared_dir": "/EDIT/prepared", "image_root": "/EDIT/data/GraSP"},
+  "vision": {"max_side": 448, "min_pixels": 4096, "max_pixels": 200704, "max_images": 16},
+  "hardware": {"gpus_per_node": 4, "nodes": 1, "tensor_parallel": 2, "ray_cpus": 16},
+  "sft": {"batch_size": 32, "max_length": 8192, "epochs": 3, "steps": null},
+  "grpo": {"batch_size": 32, "mini_batch_size": 16, "epochs": 3, "steps": null,
+           "group_size": 4, "prompt_tokens": 6144, "response_tokens": 1024,
+           "gpu_memory_fraction": 0.45, "max_num_seqs": 16},
+  "evaluation": {"per_task": 0, "max_model_len": 8192, "response_tokens": 1024}
+}

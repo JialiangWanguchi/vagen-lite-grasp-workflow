@@ -1,0 +1,5 @@
+{
+  "sft": {"steps": null, "epochs": 3},
+  "grpo": {"steps": 35, "epochs": 1},
+  "evaluation": {"per_task": 0}
+}

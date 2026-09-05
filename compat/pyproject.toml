@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grasp-vllm-compat"
+version = "0.1.0"
+description = "Auditable Qwen3-VL module-prefix correction for vLLM 0.11.0"
+
+[project.entry-points."vllm.general_plugins"]
+grasp_qwen3_vl = "grasp_vllm_compat:register"
+
+[tool.setuptools]
+py-modules = ["grasp_vllm_compat"]
