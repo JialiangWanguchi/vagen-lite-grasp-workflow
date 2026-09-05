@@ -1,0 +1,12 @@
+{
+  "evaluation_preflight": 0,
+  "base_test": 0,
+  "sft_test": 0,
+  "grpo_test": 0,
+  "sft_grpo_test": 0,
+  "evaluation_suite": 0,
+  "paired_comparison": 0,
+  "gpu_idle_after_completion": true,
+  "training_invoked": false,
+  "raw_predictions_published": false
+}

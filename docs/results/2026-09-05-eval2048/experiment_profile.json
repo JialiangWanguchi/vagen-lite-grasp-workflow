@@ -1,0 +1,66 @@
+{
+  "seed": 20260905,
+  "model": "models/Qwen3-VL-2B-Instruct-224",
+  "data": {
+    "prepared_dir": "prepared",
+    "image_root": "dataset/data/GraSP",
+    "train": "train.jsonl",
+    "val": "val.jsonl",
+    "test": "test.jsonl"
+  },
+  "vision": {
+    "max_side": 224,
+    "min_pixels": 4096,
+    "max_pixels": 50176,
+    "max_images": 16
+  },
+  "lora": {
+    "rank": 8,
+    "alpha": 16,
+    "target_modules": "all-linear",
+    "exclude_modules": ".*visual.*"
+  },
+  "hardware": {
+    "gpus_per_node": 1,
+    "nodes": 1,
+    "tensor_parallel": 1,
+    "ray_cpus": 4,
+    "object_store_bytes": 536870912
+  },
+  "sft": {
+    "batch_size": 4,
+    "micro_batch_size": 1,
+    "max_length": 3072,
+    "lr": 0.0001,
+    "epochs": 1,
+    "steps": 4
+  },
+  "grpo": {
+    "batch_size": 4,
+    "mini_batch_size": 4,
+    "micro_batch_size": 1,
+    "lr": 1e-05,
+    "epochs": 1,
+    "steps": 4,
+    "group_size": 4,
+    "temperature": 1.0,
+    "prompt_tokens": 1280,
+    "response_tokens": 512,
+    "max_num_seqs": 4,
+    "gpu_memory_fraction": 0.5,
+    "param_offload": false,
+    "optimizer_offload": false,
+    "agent_workers": 1,
+    "enforce_eager": false
+  },
+  "evaluation": {
+    "per_task": 4,
+    "gpu_memory_fraction": 0.8,
+    "max_model_len": 4096,
+    "max_num_seqs": 1,
+    "response_tokens": 2048,
+    "enforce_eager": false
+  },
+  "sft_overrides": {},
+  "grpo_overrides": {}
+}

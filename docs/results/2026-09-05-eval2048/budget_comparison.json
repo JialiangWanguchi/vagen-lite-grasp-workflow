@@ -1,0 +1,274 @@
+{
+  "created_at": "2026-09-05T14:27:02.836359+00:00",
+  "prefix": "eval2048",
+  "scope": "Paired evaluation only; no retraining or changed prompts/rewards.",
+  "n": 8,
+  "new_max_output_tokens": 2048,
+  "new_max_model_len": 4096,
+  "arms": {
+    "base": {
+      "old_budget": 512,
+      "old_context": 2048,
+      "old": {
+        "all": {
+          "n": 8,
+          "correct": 0,
+          "format_valid": 3,
+          "truncated": 1,
+          "output_tokens_max": 512
+        },
+        "A2": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 3,
+          "truncated": 0,
+          "output_tokens_max": 284
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 0,
+          "truncated": 1,
+          "output_tokens_max": 512
+        }
+      },
+      "new": {
+        "all": {
+          "n": 8,
+          "correct": 0,
+          "format_valid": 3,
+          "truncated": 1,
+          "output_tokens_max": 2048
+        },
+        "A2": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 3,
+          "truncated": 0,
+          "output_tokens_max": 284
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 0,
+          "truncated": 1,
+          "output_tokens_max": 2048
+        }
+      },
+      "exit_code": 0,
+      "resources": {
+        "elapsed_seconds": 113.0,
+        "sampled_peak_gpu_MiB": 8850
+      },
+      "previously_truncated": {
+        "n": 1,
+        "now_finished": 0,
+        "now_format_valid": 0,
+        "now_correct": 0
+      },
+      "exact_text_prefix_matches": 8,
+      "accuracy_delta_pp": 0.0,
+      "accuracy_relative_change": null
+    },
+    "sft": {
+      "old_budget": 512,
+      "old_context": 2048,
+      "old": {
+        "all": {
+          "n": 8,
+          "correct": 0,
+          "format_valid": 5,
+          "truncated": 3,
+          "output_tokens_max": 512
+        },
+        "A2": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 4,
+          "truncated": 0,
+          "output_tokens_max": 255
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 1,
+          "truncated": 3,
+          "output_tokens_max": 512
+        }
+      },
+      "new": {
+        "all": {
+          "n": 8,
+          "correct": 0,
+          "format_valid": 4,
+          "truncated": 3,
+          "output_tokens_max": 2048
+        },
+        "A2": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 3,
+          "truncated": 1,
+          "output_tokens_max": 2048
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 1,
+          "truncated": 2,
+          "output_tokens_max": 2048
+        }
+      },
+      "exit_code": 0,
+      "resources": {
+        "elapsed_seconds": 182.0,
+        "sampled_peak_gpu_MiB": 8816
+      },
+      "previously_truncated": {
+        "n": 3,
+        "now_finished": 2,
+        "now_format_valid": 1,
+        "now_correct": 0
+      },
+      "exact_text_prefix_matches": 1,
+      "accuracy_delta_pp": 0.0,
+      "accuracy_relative_change": null,
+      "unchanged_adapter_sha256": "8d58c2be570dfcf252ce6ca296f422494fb537827abb8e516480bd0bfdb6c1fb"
+    },
+    "grpo": {
+      "old_budget": 512,
+      "old_context": 2048,
+      "old": {
+        "all": {
+          "n": 8,
+          "correct": 0,
+          "format_valid": 1,
+          "truncated": 1,
+          "output_tokens_max": 512
+        },
+        "A2": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 1,
+          "truncated": 0,
+          "output_tokens_max": 444
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 0,
+          "truncated": 1,
+          "output_tokens_max": 512
+        }
+      },
+      "new": {
+        "all": {
+          "n": 8,
+          "correct": 0,
+          "format_valid": 1,
+          "truncated": 1,
+          "output_tokens_max": 2048
+        },
+        "A2": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 1,
+          "truncated": 0,
+          "output_tokens_max": 444
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 0,
+          "truncated": 1,
+          "output_tokens_max": 2048
+        }
+      },
+      "exit_code": 0,
+      "resources": {
+        "elapsed_seconds": 132.0,
+        "sampled_peak_gpu_MiB": 8816
+      },
+      "previously_truncated": {
+        "n": 1,
+        "now_finished": 0,
+        "now_format_valid": 0,
+        "now_correct": 0
+      },
+      "exact_text_prefix_matches": 8,
+      "accuracy_delta_pp": 0.0,
+      "accuracy_relative_change": null,
+      "unchanged_adapter_sha256": "86e887f3a79eac0bc2e5440e213703e59e079be003306bd6a1dcf56775620e49"
+    },
+    "sft_grpo": {
+      "old_budget": 512,
+      "old_context": 2048,
+      "old": {
+        "all": {
+          "n": 8,
+          "correct": 1,
+          "format_valid": 5,
+          "truncated": 2,
+          "output_tokens_max": 512
+        },
+        "A2": {
+          "n": 4,
+          "correct": 1,
+          "format_valid": 4,
+          "truncated": 0,
+          "output_tokens_max": 8
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 1,
+          "truncated": 2,
+          "output_tokens_max": 512
+        }
+      },
+      "new": {
+        "all": {
+          "n": 8,
+          "correct": 1,
+          "format_valid": 6,
+          "truncated": 1,
+          "output_tokens_max": 2048
+        },
+        "A2": {
+          "n": 4,
+          "correct": 1,
+          "format_valid": 4,
+          "truncated": 0,
+          "output_tokens_max": 8
+        },
+        "P1": {
+          "n": 4,
+          "correct": 0,
+          "format_valid": 2,
+          "truncated": 1,
+          "output_tokens_max": 2048
+        }
+      },
+      "exit_code": 0,
+      "resources": {
+        "elapsed_seconds": 109.0,
+        "sampled_peak_gpu_MiB": 8816
+      },
+      "previously_truncated": {
+        "n": 2,
+        "now_finished": 1,
+        "now_format_valid": 1,
+        "now_correct": 0
+      },
+      "exact_text_prefix_matches": 4,
+      "accuracy_delta_pp": 0.0,
+      "accuracy_relative_change": 0.0,
+      "unchanged_adapter_sha256": "d72467b624687a1077f2bfc956727e5d46f3da932ad69a0bcb36703b834e0f3b"
+    }
+  },
+  "limitations": [
+    "Single seed and 8 held-out rows; not efficacy or clinical validation.",
+    "512-token base row identity was reconstructed; other rows have recorded SHA.",
+    "Generation budget and supporting context limit changed together; greedy GPU execution is not guaranteed bitwise identical."
+  ]
+}

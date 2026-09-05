@@ -21,8 +21,8 @@ DEFAULTS = {
              'prompt_tokens': 1280, 'response_tokens': 512, 'max_num_seqs': 4,
              'gpu_memory_fraction': 0.50, 'param_offload': False, 'optimizer_offload': False,
              'agent_workers': 1, 'enforce_eager': False},
-    'evaluation': {'per_task': 0, 'gpu_memory_fraction': 0.80, 'max_model_len': 2048,
-                   'max_num_seqs': 1, 'response_tokens': 512, 'enforce_eager': False},
+    'evaluation': {'per_task': 0, 'gpu_memory_fraction': 0.80, 'max_model_len': 4096,
+                   'max_num_seqs': 1, 'response_tokens': 2048, 'enforce_eager': False},
     'sft_overrides': {}, 'grpo_overrides': {},
 }
 

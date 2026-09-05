@@ -4,7 +4,7 @@
 
 | 检查 | 结果 |
 |---|---|
-| `python -m unittest -v test_experiment_config.py test_task_contract.py` | 16 项全部通过（原配置测试 8 项 + 新增纯文本任务契约测试 8 项） |
+| `python -m unittest -v test_experiment_config.py test_task_contract.py test_evaluation_budget.py` | 21 项全部通过（配置 8 项 + 任务契约 8 项 + 评测预算 5 项） |
 | `python task_contract.py` | TASK_CONTRACT_CHECKS_PASS |
 | `python -m compileall -q .` | 所有 Python 文件语法编译通过 |
 | 对全部 `.sh` 执行 `bash -n` | 全部通过 |
@@ -16,3 +16,11 @@
 与已完成脚本包相比，仅 `ENVIRONMENT.md`、`WORKFLOW_REPORT.md` 和报告生成器中的示例 `cd` 路径改变。README、数据契约、授权说明、发布测试与 `.gitignore` 为新增；训练逻辑未改。
 
 本次没有重新在全新机器安装全部依赖，没有重新进行 GPU 训练，没有完成独立审计，也没有测试全量训练、多卡或多节点。此页的 CPU 检查不替代真实数据预检和新硬件短跑。
+
+## 2048-token 补充评测
+
+- 远端真实数据预算预检、base/SFT/GRPO/SFT→GRPO 评测、外层 suite 和配对比较共 7 个退出码，全部为 0。
+- 复算 32 条新输出的格式与真实标签指标；核对同一测试行、输入 token 数与样本 SHA。
+- 三个 LoRA 的权重 SHA256 与原始实验完全一致；训练未被调用。补充实验后默认评测预算同步更新为 2048/4096，历史配置留在证据目录。
+- 完成后 GPU 为 2 MiB / 0% 利用率，无遗留 screen 会话。
+- GitHub 只发布聚合对比、配置、样本 SHA 和退出码，不发布逐条预测、图片、标签或原始日志。

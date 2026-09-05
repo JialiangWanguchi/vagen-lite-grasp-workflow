@@ -47,6 +47,19 @@ Transformers 提供模型类和处理器；没有另起一套 Transformers Train
 
 当前准确率和格式表现较弱，说明输出约束、训练预算、模型容量及视觉分辨率需要后续研究；本次实验无法区分它们各自的影响。相同图片 SHA 不跨集合，但不保证病例或邻近帧隔离，不能声称病例泛化。独立实验审计未完成，详见 [审计状态](EXPERIMENT_AUDIT.md)。
 
+### 2048-token 复跑结果
+
+随后保持模型、权重、提示词和相同 8 条样本不变，将评测最大输出从 512 提高到 **2048 tokens（4 倍）**、总上下文提高到 4096，重新运行四组评测：
+
+| 组 | 512 → 2048 正确 | 512 → 2048 JSON 合法 | 512 → 2048 截断 |
+|---|---:|---:|---:|
+| base | 0/8 → 0/8 | 3/8 → 3/8 | 1/8 → 1/8 |
+| SFT | 0/8 → 0/8 | 5/8 → 4/8 | 3/8 → 3/8 |
+| GRPO | 0/8 → 0/8 | 1/8 → 1/8 | 1/8 → 1/8 |
+| SFT→GRPO | 1/8 → 1/8 | 5/8 → 6/8 | 2/8 → 1/8 |
+
+四组退出码均为 0，三个 LoRA SHA 与原实验一致，无重新训练。结果说明 512 确实影响个别输出完成，但不是主要失败原因：部分回答扩到 2048 仍不断生成，准确率没有提升。详见 [2048-token 评测复跑报告](docs/EVALUATION_2048_REPORT.md)。
+
 ## 3. 代码导航
 
 | 文件 | 用途 |
@@ -73,7 +86,7 @@ Transformers 提供模型类和处理器；没有另起一套 Transformers Train
 固定环境：Python 3.10.12、PyTorch 2.8.0+cu128、vLLM 0.11.0、Transformers 4.57.1、PEFT 0.17.1、FlashAttention 2.8.3、Ray 2.49.2、TensorDict 0.10.0。详细说明见 [ENVIRONMENT.md](ENVIRONMENT.md)。
 
 ```bash
-# 在新服务器选择自己的工作目录；私有仓库需要先配置 GitHub 访问权限
+# 在新服务器选择自己的工作目录；本仓库已公开，克隆无需私有仓库权限
 git clone https://github.com/JialiangWanguchi/vagen-lite-grasp-workflow.git
 cd vagen-lite-grasp-workflow
 export GRASP_ROOT="$PWD"
@@ -119,7 +132,7 @@ hf download Qwen/Qwen3-VL-2B-Instruct \
 export GRASP_CONFIG="$PWD/profiles/workflow_3060.json"
 export CUDA_VISIBLE_DEVICES=0
 source runtime.sh
-python -m unittest -v test_experiment_config.py test_task_contract.py
+python -m unittest -v test_experiment_config.py test_task_contract.py test_evaluation_budget.py
 python task_contract.py
 python preflight.py
 
@@ -171,11 +184,30 @@ bash finalize_results.sh
 
 ## 7. 后续扩大规模主要改哪些参数
 
+### 单独扩大评测输出预算（不重训）
+
+当前默认值、`workflow_3060.json` 与 `profiles/evaluation_2048_3060.json` 均将评测输出上限设为 **2048 tokens**，总上下文上限设为 **4096**。旧实验当时使用的 512/2048 配置完整保存在 `docs/results/2026-09-05/experiment_profile.json`，因此历史结果仍可审计；SFT 和 GRPO 的训练配置没有改变。
+
+先完成原始三个训练组并保留 `runs/` 和 `results/`，再运行：
+
+```bash
+export GRASP_CONFIG="$PWD/profiles/evaluation_2048_3060.json"
+bash run_evaluation_budget.sh eval2048
+python compare_evaluation_budget.py --prefix eval2048
+```
+
+该脚本只评测原基座和既有三组 LoRA，不调用训练入口。它要求与原结果使用同一批测试样本；预检真实输入长度，按新 prefix 隔离预测和日志，拒绝覆盖同名输出。比较脚本复算奖励/准确率、核对样本 SHA 和适配器 SHA，并检查除两项评测长度外没有其他配置变化。新增结果写入 `results/eval2048_*`，对比写入 `reports/eval2048/`；重复运行必须使用新 prefix。
+
+增大上限只给予模型更多输出空间，不保证消除重复、不保证 JSON 合法或答案正确。若改提示词、奖励或进行长输出 GRPO 重训，应另立实验，不能混入这个同权重长度对比。
+
+### 扩大训练规模
+
 完整说明见 [MIGRATION.md](MIGRATION.md)。`experiment_config.py` 定义默认值，JSON 只覆盖必要字段，未知字段会报错。
 
 | 配置 | 定位 | 本次是否完成 |
 |---|---|---|
-| `workflow_3060.json` | 每阶段 4 步，测试每任务 4 条 | 是 |
+| `workflow_3060.json` | 每阶段 4 步，测试每任务 4 条，当前 2048-token 评测 | 训练流程已验证；该评测预算已单独验证 |
+| `evaluation_2048_3060.json` | 复用已有权重，2048-token 配对评测 | 是 |
 | `dataset_3060.json` | SFT 3 epoch、GRPO 35 步、全部 40 条测试 | 否，仅提供配置 |
 | `scale_single_node.example.json` | 单节点多卡、更大 dense Qwen3-VL 的参数模板 | 否，未实机验收 |
 
@@ -185,8 +217,8 @@ bash finalize_results.sh
 
 ## 8. 可复核性与发布范围
 
-[发布来源指纹](docs/results/2026-09-05/publication_provenance.json) 记录已完成远端脚本包的 SHA256 和逐文件指纹。三组核心训练代码、共同评测代码、配置和兼容插件在发布时保持原样；新增 README/数据契约/测试，文档链接和报告生成模板做了可迁移化处理。聚合结果只替换机器特定根路径，数值没有更改。
+[发布来源指纹](docs/results/2026-09-05/publication_provenance.json) 记录初次发布时已完成远端脚本包的 SHA256 和逐文件指纹。随后按补充实验结果将默认评测预算改为 2048/4096，并新增配对评测入口；训练算法、三个既有权重和历史证据未修改。聚合结果只替换机器特定根路径，数值没有更改。
 
-不将自动检查称为独立审计；不将小样本可执行性称为算法优越性；没有把未完成的全量/多卡实验写成结果。使用、分享真实 GraSP 数据或模型时，应分别核对数据、模型与上游软件授权。本仓库尚未由所有者指定独立开源许可证，参见 [NOTICE.md](NOTICE.md)。
+不将自动检查称为独立审计；不将小样本可执行性称为算法优越性；没有把未完成的全量/多卡实验写成结果。使用、分享真实 GraSP 数据或模型时，应分别核对数据、模型与上游软件授权。本仓库现已公开，但尚未由所有者指定独立开源许可证，参见 [NOTICE.md](NOTICE.md)。
 
 上游参考：[VAGEN-Lite 固定提交](https://github.com/mll-lab-nu/VAGEN/tree/04bf4bd13bd93688d5cd66331745190486fd14d1)、[其 VERL 子模块来源](https://github.com/mll-lab-nu/VAGEN/blob/04bf4bd13bd93688d5cd66331745190486fd14d1/.gitmodules)、[vLLM 0.11.0 LoRA](https://docs.vllm.ai/en/v0.11.0/features/lora.html)。

@@ -1,0 +1,28 @@
+{
+  "prefix": "eval2048",
+  "n": 8,
+  "input_tokens": [
+    850,
+    850,
+    850,
+    850,
+    650,
+    650,
+    650,
+    650
+  ],
+  "sample_sha256": [
+    "36cf8f91ca415d548f90942c647fb8ccef4fcab37dc7a15410b4428e20f0272b",
+    "15cb56d168b53856cb1aa4ab2b666b6b6288e43af2ae49a32d05b2f9a12258f6",
+    "8ef565ccaf9e6b8dc12ec45ce77ba8a8c3e851c677e727a4d095712f99014e05",
+    "0489d511daf94f5b92d3094f57522fd578272e419092022ea5ed59e395f49b20",
+    "d2e474aa36a89ce06e35e21a7106af89a2945ac8cc63e433ed06e753a85480e4",
+    "dae07f049fefdf2bf94bd41fb4f84cd618cc35ac4cc77595cb399dff73bd6298",
+    "653c924dc1d736d2da59e925df8336acd45995fe7ebe2c7e928df7098ac73560",
+    "74a03df8ebbda8f8e979c5b522a84af41b8312a9230415cb3b526d4e0d6f2054"
+  ],
+  "split_sha256": "c37e9917428bfb946a3fdf16820c4ce6da6dccf7593ba25118650c0063c5ef64",
+  "max_output_tokens": 2048,
+  "max_model_len": 4096,
+  "baseline_identity_note": "Original base rows lack SHA; checked fixed split, row order, index, task and truth."
+}
