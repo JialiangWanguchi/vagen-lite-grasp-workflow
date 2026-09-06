@@ -1,0 +1,12 @@
+{
+  "rows": 200,
+  "task_counts": {"A2": 100, "P1": 100},
+  "unique_cases": 13,
+  "cases_per_task": {"A2": 13, "P1": 8},
+  "row_case_count_histogram": {"1": 100, "4": 100},
+  "case_components": 1,
+  "component_sizes": [13],
+  "strict_three_way_split_of_existing_rows_possible": false,
+  "materialization_rejected_rows": 99,
+  "contains_case_identifiers": false
+}

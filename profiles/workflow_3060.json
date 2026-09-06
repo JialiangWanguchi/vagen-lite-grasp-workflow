@@ -1,5 +1,5 @@
 {
   "sft": {"steps": 4, "epochs": 1},
   "grpo": {"steps": 4, "epochs": 1},
-  "evaluation": {"per_task": 4, "response_tokens": 2048, "max_model_len": 4096}
+  "evaluation": {"per_task": 4, "response_tokens": 1024, "max_model_len": 4096}
 }

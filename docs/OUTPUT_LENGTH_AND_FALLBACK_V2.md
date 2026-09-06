@@ -2,7 +2,7 @@
 
 ## 结论
 
-长度上限不再凭测试集表现手工选择。四个模型组先在固定验证集 20 条样本上，以 2048 tokens 作为诊断上限生成 80 个输出；排除所有 `finish_reason=length` 的输出后，统计均值、中位数、P90、P95 和最大值。最终上限为：
+长度上限不再凭测试集表现手工选择。四个模型组先在固定验证集 20 条样本上，以 2048 tokens 作为诊断上限生成 80 个输出；排除所有 `finish_reason=length` 的输出后，统计均值、中位数、P90、P95 和最大值。2026-09-06 的 80 条远端校准已完成：21 条触顶被排除，59 条正常输出均值 249.54、中位数 224、P90 468、P95 630、最大值 820，因此最终评测上限为 **1024**。完整结果见 `docs/LENGTH_CALIBRATION_REPORT.md`。
 
 ```text
 smallest k * 512 strictly greater than max(normal validation output_tokens)

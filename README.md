@@ -64,6 +64,8 @@ Transformers 提供模型类和处理器；没有另起一套 Transformers Train
 
 当前代码已增加三项保护：生成触及 token 上限时直接 reward=0；正常结束后以“严格 JSON → 高置信语义 fallback”两阶段判分；输出上限仅由验证集正常输出的长度分布选择。严格正确 reward=1.0，fallback 正确 reward=0.5，歧义或不完整 JSON 不自动给分。完整规则见 [输出长度与 fallback 方案](docs/OUTPUT_LENGTH_AND_FALLBACK_V2.md)。
 
+远端 80 条验证生成已完成：21 条长度触顶排除后，59 条正常输出均值 249.54、最大值 820，最终上限为 **1024**；fallback 额外正确救回 3 条。详见 [长度校准与 fallback 报告](docs/LENGTH_CALIBRATION_REPORT.md)。
+
 另经审计，现有 200 条问题的 13 个病例被 A2 样本连成单一共现分量，因此原 140/20/40 只能用于流程测试，不能声称病例泛化。正式实验必须先把病例固定为 5/4/4，再在各池内部重新生成问题；详见 [数据划分方案 v2](docs/DATA_SPLIT_PLAN_V2.md) 和 [实验计划](refine-logs/EXPERIMENT_PLAN.md)。
 
 ## 3. 代码导航
@@ -195,7 +197,7 @@ bash finalize_results.sh
 
 ### 单独扩大评测输出预算（不重训）
 
-当前默认值、`workflow_3060.json` 与 `profiles/evaluation_2048_3060.json` 均将评测输出上限设为 **2048 tokens**，总上下文上限设为 **4096**。旧实验当时使用的 512/2048 配置完整保存在 `docs/results/2026-09-05/experiment_profile.json`，因此历史结果仍可审计；SFT 和 GRPO 的训练配置没有改变。
+当前默认值与 `workflow_3060.json` 使用验证集校准后的 **1024 output tokens**；总上下文仍为 4096。`profiles/evaluation_2048_3060.json` 和 `profiles/length_calibration_2048_3060.json` 保留 2048 作为历史配对/诊断上限，不是新的生产上限。旧实验当时使用的 512/2048 配置完整保存在 `docs/results/2026-09-05/experiment_profile.json`，因此历史结果仍可审计；3060 上的 GRPO 训练 rollout 仍为 512，因为此前峰值已达 11,346 MiB，未在该卡上冒险扩大训练 KV 预算。
 
 先完成原始三个训练组并保留 `runs/` 和 `results/`，再运行：
 
@@ -215,7 +217,7 @@ python compare_evaluation_budget.py --prefix eval2048
 
 | 配置 | 定位 | 本次是否完成 |
 |---|---|---|
-| `workflow_3060.json` | 每阶段 4 步，测试每任务 4 条，当前 2048-token 评测 | 训练流程已验证；该评测预算已单独验证 |
+| `workflow_3060.json` | 每阶段 4 步，测试每任务 4 条，验证集校准的 1024-token 评测 | 训练流程已验证；1024 为本次校准结论 |
 | `evaluation_2048_3060.json` | 复用已有权重，2048-token 配对评测 | 是 |
 | `dataset_3060.json` | SFT 3 epoch、GRPO 35 步、全部 40 条测试 | 否，仅提供配置 |
 | `scale_single_node.example.json` | 单节点多卡、更大 dense Qwen3-VL 的参数模板 | 否，未实机验收 |
@@ -226,7 +228,7 @@ python compare_evaluation_budget.py --prefix eval2048
 
 ## 8. 可复核性与发布范围
 
-[发布来源指纹](docs/results/2026-09-05/publication_provenance.json) 记录初次发布时已完成远端脚本包的 SHA256 和逐文件指纹。随后按补充实验结果将默认评测预算改为 2048/4096，并新增配对评测入口；训练算法、三个既有权重和历史证据未修改。聚合结果只替换机器特定根路径，数值没有更改。
+[发布来源指纹](docs/results/2026-09-05/publication_provenance.json) 记录初次发布时已完成远端脚本包的 SHA256 和逐文件指纹。随后先完成 2048/4096 配对诊断，再用验证集 80 个输出将默认评测上限校准为 1024；训练 rollout、三个既有权重和历史证据未被改写。聚合结果不包含逐条预测或机器凭据。
 
 不将自动检查称为独立审计；不将小样本可执行性称为算法优越性；没有把未完成的全量/多卡实验写成结果。使用、分享真实 GraSP 数据或模型时，应分别核对数据、模型与上游软件授权。本仓库现已公开，但尚未由所有者指定独立开源许可证，参见 [NOTICE.md](NOTICE.md)。
 

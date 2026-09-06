@@ -1,0 +1,67 @@
+{
+  "selection_split": "val",
+  "selection_rule": "smallest k*quantum strictly greater than max normal output",
+  "quantum": 512,
+  "total_outputs": 80,
+  "excluded_length_limited": 21,
+  "normal_outputs": {
+    "n": 59,
+    "mean": 249.54237288135593,
+    "median": 224,
+    "p90": 468,
+    "p95": 630,
+    "max": 820
+  },
+  "groups": {
+    "arm:base": {
+      "n": 10,
+      "mean": 290.9,
+      "median": 264.5,
+      "p90": 405,
+      "p95": 417,
+      "max": 417
+    },
+    "arm:grpo": {
+      "n": 15,
+      "mean": 290.93333333333334,
+      "median": 287,
+      "p90": 402,
+      "p95": 411,
+      "max": 411
+    },
+    "arm:sft": {
+      "n": 17,
+      "mean": 289.2352941176471,
+      "median": 209,
+      "p90": 630,
+      "p95": 795,
+      "max": 795
+    },
+    "arm:sft_grpo": {
+      "n": 17,
+      "mean": 149.0,
+      "median": 8,
+      "p90": 489,
+      "p95": 820,
+      "max": 820
+    },
+    "task:A2": {
+      "n": 37,
+      "mean": 167.8918918918919,
+      "median": 188,
+      "p90": 326,
+      "p95": 403,
+      "max": 411
+    },
+    "task:P1": {
+      "n": 22,
+      "mean": 386.8636363636364,
+      "median": 355.5,
+      "p90": 630,
+      "p95": 795,
+      "max": 820
+    }
+  },
+  "recommended_max_output_tokens": 1024,
+  "test_set_used_for_selection": false
+}

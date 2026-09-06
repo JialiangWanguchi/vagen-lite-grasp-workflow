@@ -48,7 +48,7 @@ python case_split.py materialize \
   --manifest private_case_manifest.json --output-dir prepared_v2
 ```
 
-第三步对当前旧 A2 数据应当失败，这是正确行为；它会列出跨病例分区的样本示例，而不是静默泄漏。
+第三步对当前旧 A2 数据应当失败，这是正确行为；真实试跑拒绝了 99/200 行（均为跨病例分区问题），而不是静默泄漏。
 
 ## 验收门槛
 
@@ -58,4 +58,3 @@ python case_split.py materialize \
 - 每条 A2 的四个病例属于同一 manifest split；
 - manifest、生成器版本、seed、源数据指纹写入运行产物；
 - 校准阶段不读 test，最终比较才读 test。
-

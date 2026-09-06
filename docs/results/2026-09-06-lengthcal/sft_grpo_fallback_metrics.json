@@ -1,0 +1,14 @@
+{
+  "n": 20,
+  "strict_correct": 5,
+  "accepted_correct": 5,
+  "format_valid": 16,
+  "hard_negative_length": 3,
+  "review_required": 0,
+  "match_modes": {
+    "fallback_wrong": 1,
+    "length_hard_negative": 3,
+    "strict_correct": 5,
+    "strict_wrong": 11
+  }
+}

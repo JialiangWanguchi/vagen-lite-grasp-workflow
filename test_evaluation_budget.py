@@ -28,8 +28,8 @@ class EvaluationBudgetTests(unittest.TestCase):
         self.assertEqual(self.old['evaluation']['max_model_len'],2048)
         self.assertEqual(self.new['evaluation']['per_task'],4)
 
-    def test_current_default_uses_expanded_budget(self):
-        self.assertEqual(DEFAULTS['evaluation']['response_tokens'],2048)
+    def test_current_default_uses_validation_calibrated_budget(self):
+        self.assertEqual(DEFAULTS['evaluation']['response_tokens'],1024)
         self.assertEqual(DEFAULTS['evaluation']['max_model_len'],4096)
 
 if __name__=='__main__':
