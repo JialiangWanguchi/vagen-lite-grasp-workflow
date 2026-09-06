@@ -60,6 +60,12 @@ Transformers 提供模型类和处理器；没有另起一套 Transformers Train
 
 四组退出码均为 0，三个 LoRA SHA 与原实验一致，无重新训练。结果说明 512 确实影响个别输出完成，但不是主要失败原因：部分回答扩到 2048 仍不断生成，准确率没有提升。详见 [2048-token 评测复跑报告](docs/EVALUATION_2048_REPORT.md)。
 
+### v2：长度硬判负、fallback 与病例级划分
+
+当前代码已增加三项保护：生成触及 token 上限时直接 reward=0；正常结束后以“严格 JSON → 高置信语义 fallback”两阶段判分；输出上限仅由验证集正常输出的长度分布选择。严格正确 reward=1.0，fallback 正确 reward=0.5，歧义或不完整 JSON 不自动给分。完整规则见 [输出长度与 fallback 方案](docs/OUTPUT_LENGTH_AND_FALLBACK_V2.md)。
+
+另经审计，现有 200 条问题的 13 个病例被 A2 样本连成单一共现分量，因此原 140/20/40 只能用于流程测试，不能声称病例泛化。正式实验必须先把病例固定为 5/4/4，再在各池内部重新生成问题；详见 [数据划分方案 v2](docs/DATA_SPLIT_PLAN_V2.md) 和 [实验计划](refine-logs/EXPERIMENT_PLAN.md)。
+
 ## 3. 代码导航
 
 | 文件 | 用途 |
@@ -68,8 +74,11 @@ Transformers 提供模型类和处理器；没有另起一套 Transformers Train
 | `train_grpo.py` / `run_grpo.sh` | VAGEN-Lite 单轮 GRPO，可显式传入 adapter |
 | `train_sft_grpo.py` / `run_sft_grpo.sh` | 从基座独立 SFT，再将导出的 LoRA 传给 GRPO |
 | `evaluate_vllm.py` | 基座及三组共同的 vLLM 贪心评测 |
+| `calibrate_output_length.py` / `run_length_calibration.sh` | 仅用验证集选择输出 token 上限 |
+| `rejudge_predictions.py` | 不重新生成，重放判分并导出人工审计候选 |
+| `case_split.py` | 病例共现审计、case-first manifest 与严格物化 |
 | `experiment_config.py` / `profiles/` | 默认参数、深度合并、校验和硬件规模模板 |
-| `task_contract.py` | 提示词、真实标签、SFT 目标与严格 JSON 奖励 |
+| `task_contract.py` | 提示词、真实标签、长度硬判负、严格 JSON 与保守 fallback 奖励 |
 | `grasp_common.py` / `grasp_sft_dataset.py` | 全组共用图片加载；SFT 多模态数据适配 |
 | `grasp_env.py` / `grasp_seed.py` | 一次回答即终止的环境与训练种子 |
 | `compat/` | 固定 vLLM 版本的 Qwen3-VL 视觉前缀兼容插件 |
@@ -124,7 +133,7 @@ hf download Qwen/Qwen3-VL-2B-Instruct \
 
 目录后缀 `-224` 只是约定名称，图像处理由 profile 的 `vision` 字段控制；也可直接配置已有原始模型目录。文本版 Qwen3 不接受图片，这里使用的是 Qwen3 系列的 **VL dense** 模型。
 
-准备 `prepared/train.jsonl`、`val.jsonl`、`test.jsonl`，以及 `dataset/data/GraSP/` 下的图片，或在 profile 中配置已有路径。数据不在 GitHub；字段与拆分要求见 [数据契约](docs/DATA_CONTRACT.md)。当前仓库不附带针对新数据自动划分的通用脚本。
+准备 `prepared/train.jsonl`、`val.jsonl`、`test.jsonl`，以及 `dataset/data/GraSP/` 下的图片，或在 profile 中配置已有路径。数据不在 GitHub；字段与拆分要求见 [数据契约](docs/DATA_CONTRACT.md)。`case_split.py` 用于病例级审计、生成私有 manifest，并严格物化重新生成后的数据。
 
 ## 5. 先预检，再运行三个独立实验
 
@@ -132,7 +141,7 @@ hf download Qwen/Qwen3-VL-2B-Instruct \
 export GRASP_CONFIG="$PWD/profiles/workflow_3060.json"
 export CUDA_VISIBLE_DEVICES=0
 source runtime.sh
-python -m unittest -v test_experiment_config.py test_task_contract.py test_evaluation_budget.py
+python -m unittest -v
 python task_contract.py
 python preflight.py
 
