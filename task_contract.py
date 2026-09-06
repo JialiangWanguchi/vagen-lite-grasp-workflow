@@ -144,11 +144,11 @@ def _fallback_answer(text, row):
             if not (candidate.startswith('{') and candidate.endswith('}')):
                 return None, False, False, 'malformed_json'
             if row['task_id'] == 'A2':
-                fields = re.findall(r'["\']answer["\']\s*:\s*["\']([^"\']+)["\']',
+                fields = re.findall(r'["\']answer["\']\s*:\s*["\']([^"\']+)["\']\s*}',
                                     candidate, flags=re.IGNORECASE)
                 parsed = {'answer': fields[0]} if len(fields) == 1 else None
             else:
-                fields = re.findall(r'["\']answer["\']\s*:\s*(\[[^\]]*\])',
+                fields = re.findall(r'["\']answer["\']\s*:\s*(\[[^\]]*\])\s*}',
                                     candidate, flags=re.IGNORECASE)
                 try:
                     parsed = {'answer': json.loads(fields[0].replace("'", '"'))} if len(fields) == 1 else None

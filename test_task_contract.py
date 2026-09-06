@@ -106,6 +106,11 @@ class TaskContractTests(unittest.TestCase):
         self.assertEqual(result['reward'], FALLBACK_REWARD)
         self.assertEqual(result['normalized_answer'], 'A')
 
+    def test_answer_like_text_inside_malformed_think_is_not_salvaged(self):
+        row = {'task_id':'A2','gt_answer':'A'}
+        text = '{"think":"I could write \'answer\':\'A\' here" BROKEN}'
+        self.assertEqual(judge_answer(text, row, finish_reason='stop')['reward'], 0)
+
     def test_reasoning_body_is_not_mined_for_answer(self):
         row = {'task_id':'A2','gt_answer':'A'}
         result = judge_answer('I considered A, B, C and D. The images are difficult.', row)
